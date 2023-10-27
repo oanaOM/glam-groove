@@ -103,4 +103,64 @@ describe("Products page", () => {
 		cy.get('[data-cy="products-loading"]').should("contain", "Loading...")
 		cy.get("a").should("contain", "Product 32")
 	})
+
+	it.only("should add the products to the cart even if there are already products in the cart", () => {
+		cy.visit("http://localhost:3000/products", {
+			onBeforeLoad: function (window) {
+				window.localStorage.setItem(
+					"new-cart",
+					JSON.stringify([
+						{
+							id: 12,
+							name: "Product 12",
+							description: "Commodi recusandae porro perspiciatis",
+							image: "",
+							price: 108,
+							category: {
+								name: "oil",
+								order: 500,
+							},
+							quantity: 1,
+						},
+					]),
+				)
+			},
+		})
+
+		cy.get('[data-cy="32"]').click()
+		cy.get("div").should("contain", "Product added successfully to the cart")
+
+		cy.getAllLocalStorage().then((result) => {
+			expect(result).to.deep.equal({
+				"http://localhost:3000": {
+					"new-cart": JSON.stringify([
+						{
+							id: 12,
+							name: "Product 12",
+							description: "Commodi recusandae porro perspiciatis",
+							image: "",
+							price: 108,
+							category: {
+								name: "oil",
+								order: 500,
+							},
+							quantity: 1,
+						},
+						{
+							id: 32,
+							name: "Product 32",
+							description: "Commodi recusandae porro perspiciatis",
+							image: "",
+							price: 106,
+							category: {
+								name: "oil",
+								order: 500,
+							},
+							quantity: 1,
+						},
+					]),
+				},
+			})
+		})
+	})
 })

@@ -9,7 +9,10 @@ import useProductApi from "./useProductsApi"
 
 export default function ProductsList() {
 	const [filter, setFilter] = useState<Category>()
-	const [productsInCart, setProductsInCart] = useState<ProductsInCart[]>([])
+	const initialProductsInCart: ProductsInCart[] =
+		typeof window !== "undefined" ? JSON.parse(localStorage.getItem("new-cart") || "[]") : []
+
+	const [productsInCart, setProductsInCart] = useState<ProductsInCart[]>(initialProductsInCart || [])
 	const [productAddedToCart, setProductAddedToCart] = useState<boolean>(false)
 	const timeoutRef = useRef<number | null>(null)
 
@@ -83,24 +86,22 @@ export default function ProductsList() {
 
 				{/* --- show toast for adding a new product to the cart */}
 				{productAddedToCart && (
-					<div>
-						<Toast>
-							<div className="inline-flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-green-100 text-green-500 dark:bg-green-800 dark:text-green-200">
-								<svg
-									xmlns="http://www.w3.org/2000/svg"
-									fill="none"
-									viewBox="0 0 24 24"
-									strokeWidth={1.5}
-									stroke="currentColor"
-									className="w-6 h-6"
-								>
-									<path strokeLinecap="round" strokeLinejoin="round" d="M4.5 12.75l6 6 9-13.5" />
-								</svg>
-							</div>
-							<div className="ml-3 text-sm font-normal">Product added successfully to the cart.</div>
-							<Toast.Toggle />
-						</Toast>
-					</div>
+					<Toast className="z-50  fixed right-24">
+						<div className="inline-flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-green-100 text-green-500 dark:bg-green-800 dark:text-green-200">
+							<svg
+								xmlns="http://www.w3.org/2000/svg"
+								fill="none"
+								viewBox="0 0 24 24"
+								strokeWidth={1.5}
+								stroke="currentColor"
+								className="w-6 h-6"
+							>
+								<path strokeLinecap="round" strokeLinejoin="round" d="M4.5 12.75l6 6 9-13.5" />
+							</svg>
+						</div>
+						<div className="ml-3 text-sm font-normal">Product added successfully to the cart.</div>
+						<Toast.Toggle />
+					</Toast>
 				)}
 				<div className="divide-y divide-gray-200">
 					{isLoading ? (
