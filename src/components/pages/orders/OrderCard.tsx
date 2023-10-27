@@ -1,6 +1,7 @@
 import { Alert, Badge, Card } from "flowbite-react"
 import { Order } from "~/components/types"
 import { formatCurrencyNumber } from "../../../../lib/utils"
+import DateAndTime from "~/components/common/DateAndTime"
 
 interface OrderCardProps {
 	order: Order
@@ -31,7 +32,7 @@ export default function OrderCard({ order }: OrderCardProps) {
 						<h5 className="text-xl font-bold leading-none text-gray-900 dark:text-white">
 							Order number: {order.id}
 						</h5>
-						<time dateTime={order.createdAt}>{order.createdAt}</time>
+						<DateAndTime date={order.createdAt} />
 
 						<Badge color="green">{order.status}</Badge>
 					</div>

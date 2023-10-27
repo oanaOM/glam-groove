@@ -14,7 +14,8 @@ export default function Orders() {
 		e.preventDefault()
 
 		// Read the form data
-		const formData = new FormData(e.target)
+		const target = e.target as HTMLFormElement
+		const formData = new FormData(target)
 
 		const form = Object.fromEntries(formData.entries())
 		setOrderId(Number(form.orderId))
