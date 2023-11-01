@@ -8,12 +8,15 @@ import { API_URL } from "../../../../lib/consts"
 import { confirmOrder, createOrder } from "./useNewOrderApi"
 import useSWRMutation from "swr/mutation"
 import { createPortal } from "react-dom"
+import { useCartContext } from "~/components/providers/CartProvider"
 
 export default function NewCart() {
 	const [productsInCart, setProductsInCart] = useState<ProductsInCart[]>([])
 	const [updatedCart, setUpdatedCart] = useState<boolean>(false)
 	const [toggleConfirmationOrder, setToggleConfirmationOrder] = useState<boolean>(false)
 	const [newOrderId, setNewOrderId] = useState<number>()
+
+	const cart = useCartContext()
 
 	function handleIncrementQuantity(productId: number) {
 		setProductsInCart(
@@ -99,6 +102,8 @@ export default function NewCart() {
 			setUpdatedCart(false)
 		}
 	}, [updatedCart, productsInCart])
+
+	console.log(">>CART: ", cart)
 
 	return (
 		<>

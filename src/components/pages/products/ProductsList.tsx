@@ -6,15 +6,14 @@ import Link from "next/link"
 import { Alert, Spinner, Toast } from "flowbite-react"
 import PageHeading from "~/components/common/layout/PageHeading"
 import useProductApi from "./useProductsApi"
+import { useCartDispatchContext } from "~/components/providers/CartProvider"
 
 export default function ProductsList() {
 	const [filter, setFilter] = useState<Category>()
-	const initialProductsInCart: ProductsInCart[] =
-		typeof window !== "undefined" ? JSON.parse(localStorage.getItem("new-cart") || "[]") : []
-
-	const [productsInCart, setProductsInCart] = useState<ProductsInCart[]>(initialProductsInCart || [])
+	// TODO: handle initial content of the cart
 	const [productAddedToCart, setProductAddedToCart] = useState<boolean>(false)
 	const timeoutRef = useRef<number | null>(null)
+	const dispatch = useCartDispatchContext()
 
 	const { categories, products, groupByCategory, isLoading } = useProductApi()
 
@@ -27,36 +26,21 @@ export default function ProductsList() {
 		: groupByCategory
 
 	function handleAddToCart(productId: number) {
-		// updatedProductsInCart is responsible to update the quantity of a product if exists in the cart
-		const updatedProductsInCart = productsInCart.map((product) => {
-			if (product.id === productId) {
-				return {
-					...product,
-					quantity: product.quantity ? product.quantity + 1 : 1,
-				}
-			}
-			return product
-		})
 		const productToAdd = products?.find((product) => product.id === productId)
 		if (!productToAdd) {
 			return
 		}
-		// if product not in cart, update it with quantity 1
-		if (!productsInCart.some((product) => product.id === productToAdd.id)) {
-			setProductsInCart([...productsInCart, { ...productToAdd, quantity: 1 }])
-			setProductAddedToCart(true)
-		} else {
-			// if product already in cart, update the state of the products in cart
-			setProductsInCart(updatedProductsInCart)
+
+		if (dispatch) {
+			dispatch({
+				type: "added",
+				product: productToAdd,
+			})
 			setProductAddedToCart(true)
 		}
 	}
 
 	useEffect(() => {
-		if (productsInCart.length > 0) {
-			localStorage.setItem("new-cart", JSON.stringify(productsInCart))
-		}
-
 		if (productAddedToCart) {
 			timeoutRef.current = setTimeout(() => {
 				setProductAddedToCart(false)
@@ -67,7 +51,7 @@ export default function ProductsList() {
 				clearTimeout(timeoutRef.current)
 			}
 		}
-	}, [productsInCart, productAddedToCart])
+	}, [productAddedToCart])
 
 	return (
 		<div className="container">
