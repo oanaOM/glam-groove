@@ -2,6 +2,19 @@
 
 Our online shop that offers you products to make you feel glamourous.
 
+## About
+
+This online shop offers the following features:
+
+-   on the Products page
+    i. List the products grouped by category.
+    ii. Products can be added to a new order
+-   on Order view
+    i. Search for an order id and list the products added to that given order
+-   on the Cart view
+    ii. User should be able to change the quantity of products
+    iii. User should be able to buy the order. Upon a successful purchase, the user will see a confirmation toast
+
 ## Getting Started
 
 First, run the development server:
