@@ -49,7 +49,7 @@ function ProductCard({
 										className="bg-sky-500 px-4 py-2 rounded-md text-white my-4"
 										data-cy={product.id}
 									>
-										Add to card
+										Add to cart
 									</button>
 								</div>
 							)}
